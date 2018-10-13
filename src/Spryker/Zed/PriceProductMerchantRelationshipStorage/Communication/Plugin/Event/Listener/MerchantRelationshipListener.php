@@ -30,7 +30,11 @@ class MerchantRelationshipListener extends AbstractPlugin implements EventBulkHa
      */
     public function handleBulk(array $eventTransfers, $eventName): void
     {
-        $businessUnitIds = $this->getFactory()->getEventBehaviorFacade()->getEventTransferForeignKeys($eventTransfers, PriceProductMerchantRelationshipStorageConstants::COL_FK_COMPANY_BUSINESS_UNIT);
+        $businessUnitIds = array_merge(
+            $this->getFactory()->getEventBehaviorFacade()->getEventTransferForeignKeys($eventTransfers, PriceProductMerchantRelationshipStorageConstants::COL_FK_COMPANY_BUSINESS_UNIT),
+            $this->getFactory()->getEventBehaviorFacade()->getEventTransferIds($eventTransfers)
+        );
+
         $this->getFacade()->publishAbstractPriceProductByBusinessUnits($businessUnitIds);
         $this->getFacade()->publishConcretePriceProductByBusinessUnits($businessUnitIds);
     }
