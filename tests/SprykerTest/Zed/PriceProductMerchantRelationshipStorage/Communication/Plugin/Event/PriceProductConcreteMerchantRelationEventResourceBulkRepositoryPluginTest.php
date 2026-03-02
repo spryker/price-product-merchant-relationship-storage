@@ -30,9 +30,6 @@ class PriceProductConcreteMerchantRelationEventResourceBulkRepositoryPluginTest 
      */
     protected $tester;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -40,9 +37,6 @@ class PriceProductConcreteMerchantRelationEventResourceBulkRepositoryPluginTest 
         $this->tester->ensurePriceProductMerchantRelationshipTableIsEmpty();
     }
 
-    /**
-     * @return void
-     */
     public function testGetDataReturnsTransferAccordingToOffsetAndLimit(): void
     {
         // Arrange
@@ -63,9 +57,6 @@ class PriceProductConcreteMerchantRelationEventResourceBulkRepositoryPluginTest 
         );
     }
 
-    /**
-     * @return void
-     */
     public function testGetDataDoesNotDuplicateDataWhenMerchantRelationshipHasTwoBusinessUnits(): void
     {
         // Arrange

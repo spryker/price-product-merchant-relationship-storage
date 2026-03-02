@@ -12,12 +12,6 @@ use Orm\Zed\PriceProductMerchantRelationship\Persistence\SpyPriceProductMerchant
 
 interface PriceProductMerchantRelationshipMapperInterface
 {
-    /**
-     * @param \Orm\Zed\PriceProductMerchantRelationship\Persistence\SpyPriceProductMerchantRelationship $priceProductMerchantRelationshipEntity
-     * @param \Generated\Shared\Transfer\PriceProductMerchantRelationshipTransfer $priceProductMerchantRelationshipTransfer
-     *
-     * @return \Generated\Shared\Transfer\PriceProductMerchantRelationshipTransfer
-     */
     public function mapEntityToPriceProductMerchantRelationshipTransfer(
         SpyPriceProductMerchantRelationship $priceProductMerchantRelationshipEntity,
         PriceProductMerchantRelationshipTransfer $priceProductMerchantRelationshipTransfer

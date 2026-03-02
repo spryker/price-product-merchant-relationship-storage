@@ -23,41 +23,26 @@ use Spryker\Zed\PriceProductMerchantRelationshipStorage\PriceProductMerchantRela
  */
 class PriceProductMerchantRelationshipStoragePersistenceFactory extends AbstractPersistenceFactory
 {
-    /**
-     * @return \Spryker\Zed\PriceProductMerchantRelationshipStorage\Persistence\Mapper\CompanyBusinessUnitPriceProductMapperInterface
-     */
     public function createCompanyBusinessUnitPriceProductMapper(): CompanyBusinessUnitPriceProductMapperInterface
     {
         return new CompanyBusinessUnitPriceProductMapper();
     }
 
-    /**
-     * @return \Orm\Zed\PriceProductMerchantRelationship\Persistence\SpyPriceProductMerchantRelationshipQuery
-     */
     public function getPropelPriceProductMerchantRelationshipQuery(): SpyPriceProductMerchantRelationshipQuery
     {
         return $this->getProvidedDependency(PriceProductMerchantRelationshipStorageDependencyProvider::PROPEL_QUERY_PRICE_PRODUCT_MERCHANT_RELATIONSHIP);
     }
 
-    /**
-     * @return \Orm\Zed\PriceProductMerchantRelationshipStorage\Persistence\SpyPriceProductConcreteMerchantRelationshipStorageQuery
-     */
     public function createPriceProductConcreteMerchantRelationshipStorageQuery(): SpyPriceProductConcreteMerchantRelationshipStorageQuery
     {
         return SpyPriceProductConcreteMerchantRelationshipStorageQuery::create();
     }
 
-    /**
-     * @return \Orm\Zed\PriceProductMerchantRelationshipStorage\Persistence\SpyPriceProductAbstractMerchantRelationshipStorageQuery
-     */
     public function createPriceProductAbstractMerchantRelationshipStorageQuery(): SpyPriceProductAbstractMerchantRelationshipStorageQuery
     {
         return SpyPriceProductAbstractMerchantRelationshipStorageQuery::create();
     }
 
-    /**
-     * @return \Spryker\Zed\PriceProductMerchantRelationshipStorage\Persistence\Mapper\PriceProductMerchantRelationship\PriceProductMerchantRelationshipMapper
-     */
     public function createPriceProductMerchantRelationshipMapper(): PriceProductMerchantRelationshipMapper
     {
         return new PriceProductMerchantRelationshipMapper();

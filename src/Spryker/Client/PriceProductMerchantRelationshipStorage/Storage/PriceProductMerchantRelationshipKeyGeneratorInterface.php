@@ -9,12 +9,5 @@ namespace Spryker\Client\PriceProductMerchantRelationshipStorage\Storage;
 
 interface PriceProductMerchantRelationshipKeyGeneratorInterface
 {
-    /**
-     * @param string $resourceName
-     * @param int $idProduct
-     * @param int $idCompanyBusinessUnit
-     *
-     * @return string
-     */
     public function generateKey(string $resourceName, int $idProduct, int $idCompanyBusinessUnit): string;
 }

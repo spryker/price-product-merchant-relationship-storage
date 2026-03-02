@@ -27,9 +27,6 @@ use Spryker\Zed\PriceProductMerchantRelationshipStorage\PriceProductMerchantRela
  */
 class PriceProductMerchantRelationshipStorageBusinessFactory extends AbstractBusinessFactory
 {
-    /**
-     * @return \Spryker\Zed\PriceProductMerchantRelationshipStorage\Business\Model\PriceProductAbstractStorageWriterInterface
-     */
     public function createPriceProductAbstractStorageWriter(): PriceProductAbstractStorageWriterInterface
     {
         return new PriceProductAbstractStorageWriter(
@@ -40,9 +37,6 @@ class PriceProductMerchantRelationshipStorageBusinessFactory extends AbstractBus
         );
     }
 
-    /**
-     * @return \Spryker\Zed\PriceProductMerchantRelationshipStorage\Business\Model\PriceProductConcreteStorageWriterInterface
-     */
     public function createPriceProductConcreteStorageWriter(): PriceProductConcreteStorageWriterInterface
     {
         return new PriceProductConcreteStorageWriter(
@@ -53,9 +47,6 @@ class PriceProductMerchantRelationshipStorageBusinessFactory extends AbstractBus
         );
     }
 
-    /**
-     * @return \Spryker\Zed\PriceProductMerchantRelationshipStorage\Business\Writer\PriceProductMerchantRelationshipStorageWriterInterface
-     */
     public function createPriceProductMerchantRelationshipStorageWriter(): PriceProductMerchantRelationshipStorageWriterInterface
     {
         return new PriceProductMerchantRelationshipStorageWriter(
@@ -66,25 +57,16 @@ class PriceProductMerchantRelationshipStorageBusinessFactory extends AbstractBus
         );
     }
 
-    /**
-     * @return \Spryker\Zed\PriceProductMerchantRelationshipStorage\Business\Model\PriceGrouperInterface
-     */
     public function createPriceGrouper(): PriceGrouperInterface
     {
         return new PriceGrouper();
     }
 
-    /**
-     * @return \Spryker\Zed\PriceProductMerchantRelationshipStorage\Dependency\Facade\PriceProductMerchantRelationshipStorageToEventBehaviorFacadeInterface
-     */
     public function getEventBehaviorFacade(): PriceProductMerchantRelationshipStorageToEventBehaviorFacadeInterface
     {
         return $this->getProvidedDependency(PriceProductMerchantRelationshipStorageDependencyProvider::FACADE_EVENT_BEHAVIOR);
     }
 
-    /**
-     * @return \Spryker\Zed\PriceProductMerchantRelationshipStorage\Dependency\Facade\PriceProductMerchantRelationshipStorageToMerchantRelationshipFacadeInterface
-     */
     public function getMerchantRelationshipFacade(): PriceProductMerchantRelationshipStorageToMerchantRelationshipFacadeInterface
     {
         return $this->getProvidedDependency(PriceProductMerchantRelationshipStorageDependencyProvider::FACADE_MERCHANT_RELATIONSHIP);

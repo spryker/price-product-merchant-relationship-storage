@@ -30,9 +30,6 @@ class PriceProductAbstractMerchantRelationEventResourceBulkRepositoryPluginTest 
      */
     protected $tester;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -40,9 +37,6 @@ class PriceProductAbstractMerchantRelationEventResourceBulkRepositoryPluginTest 
         $this->tester->ensurePriceProductMerchantRelationshipTableIsEmpty();
     }
 
-    /**
-     * @return void
-     */
     public function testGetDataReturnsTransferAccordingToOffsetAndLimit(): void
     {
         if ($this->tester->isDynamicStoreEnabled()) {
@@ -66,9 +60,6 @@ class PriceProductAbstractMerchantRelationEventResourceBulkRepositoryPluginTest 
         );
     }
 
-    /**
-     * @return void
-     */
     public function testGetDataDoesNotDuplicateDataWhenMerchantRelationshipHasTwoBusinessUnits(): void
     {
         if ($this->tester->isDynamicStoreEnabled()) {

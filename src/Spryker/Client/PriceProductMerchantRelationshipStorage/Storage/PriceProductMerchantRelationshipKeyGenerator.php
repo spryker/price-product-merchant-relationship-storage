@@ -28,10 +28,6 @@ class PriceProductMerchantRelationshipKeyGenerator implements PriceProductMercha
      */
     protected $storeClient;
 
-    /**
-     * @param \Spryker\Client\PriceProductMerchantRelationshipStorage\Dependency\Service\PriceProductMerchantRelationshipToSynchronizationServiceInterface $synchronizationService
-     * @param \Spryker\Client\PriceProductMerchantRelationshipStorage\Dependency\Client\PriceProductMerchantRelationshipStorageToStoreClientInterface $storeClient
-     */
     public function __construct(
         PriceProductMerchantRelationshipToSynchronizationServiceInterface $synchronizationService,
         PriceProductMerchantRelationshipStorageToStoreClientInterface $storeClient
@@ -40,13 +36,6 @@ class PriceProductMerchantRelationshipKeyGenerator implements PriceProductMercha
         $this->storeClient = $storeClient;
     }
 
-    /**
-     * @param string $resourceName
-     * @param int $idProduct
-     * @param int $idCompanyBusinessUnit
-     *
-     * @return string
-     */
     public function generateKey(string $resourceName, int $idProduct, int $idCompanyBusinessUnit): string
     {
         $synchronizationDataTransfer = new SynchronizationDataTransfer();

@@ -38,12 +38,6 @@ class PriceProductMerchantRelationshipStorageWriter implements PriceProductMerch
      */
     protected $priceProductConcreteStorageWriter;
 
-    /**
-     * @param \Spryker\Zed\PriceProductMerchantRelationshipStorage\Dependency\Facade\PriceProductMerchantRelationshipStorageToEventBehaviorFacadeInterface $eventBehaviorFacade
-     * @param \Spryker\Zed\PriceProductMerchantRelationshipStorage\Dependency\Facade\PriceProductMerchantRelationshipStorageToMerchantRelationshipFacadeInterface $merchantRelationshipFacade
-     * @param \Spryker\Zed\PriceProductMerchantRelationshipStorage\Business\Model\PriceProductAbstractStorageWriterInterface $priceProductAbstractStorageWriter
-     * @param \Spryker\Zed\PriceProductMerchantRelationshipStorage\Business\Model\PriceProductConcreteStorageWriterInterface $priceProductConcreteStorageWriter
-     */
     public function __construct(
         PriceProductMerchantRelationshipStorageToEventBehaviorFacadeInterface $eventBehaviorFacade,
         PriceProductMerchantRelationshipStorageToMerchantRelationshipFacadeInterface $merchantRelationshipFacade,
@@ -114,11 +108,6 @@ class PriceProductMerchantRelationshipStorageWriter implements PriceProductMerch
         return $companyBusinessUnitIds;
     }
 
-    /**
-     * @param int $idMerchant
-     *
-     * @return \Generated\Shared\Transfer\MerchantRelationshipCriteriaTransfer
-     */
     protected function createMerchantRelationshipCriteriaTransfer(int $idMerchant): MerchantRelationshipCriteriaTransfer
     {
         $merchantRelationshipConditionsTransfer = (new MerchantRelationshipConditionsTransfer())->addIdMerchant($idMerchant);

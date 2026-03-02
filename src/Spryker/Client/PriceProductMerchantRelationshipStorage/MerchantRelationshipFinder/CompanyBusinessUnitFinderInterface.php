@@ -9,8 +9,5 @@ namespace Spryker\Client\PriceProductMerchantRelationshipStorage\MerchantRelatio
 
 interface CompanyBusinessUnitFinderInterface
 {
-    /**
-     * @return int|null
-     */
     public function findCurrentCustomerCompanyBusinessUnitId(): ?int;
 }

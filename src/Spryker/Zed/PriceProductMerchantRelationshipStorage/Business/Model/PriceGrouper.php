@@ -17,12 +17,6 @@ class PriceGrouper implements PriceGrouperInterface
      */
     protected const PRICES = 'prices';
 
-    /**
-     * @param \Generated\Shared\Transfer\PriceProductMerchantRelationshipStorageTransfer $priceProductMerchantRelationshipStorageTransfer
-     * @param array $pricesData
-     *
-     * @return \Generated\Shared\Transfer\PriceProductMerchantRelationshipStorageTransfer
-     */
     public function groupPricesData(
         PriceProductMerchantRelationshipStorageTransfer $priceProductMerchantRelationshipStorageTransfer,
         array $pricesData = []
@@ -40,11 +34,6 @@ class PriceGrouper implements PriceGrouperInterface
         );
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PriceProductMerchantRelationshipStorageTransfer $priceProductMerchantRelationshipStorageTransfer
-     *
-     * @return array
-     */
     protected function groupPrices(
         PriceProductMerchantRelationshipStorageTransfer $priceProductMerchantRelationshipStorageTransfer
     ): array {
@@ -61,12 +50,6 @@ class PriceGrouper implements PriceGrouperInterface
         return $groupedPrices;
     }
 
-    /**
-     * @param array $priceData
-     * @param string $excludeKey
-     *
-     * @return array
-     */
     protected function filterPriceData(array $priceData, string $excludeKey): array
     {
         $priceData = array_filter($priceData, function ($v, $k) use ($excludeKey) {
@@ -90,11 +73,6 @@ class PriceGrouper implements PriceGrouperInterface
         return $priceData;
     }
 
-    /**
-     * @param array $prices
-     *
-     * @return array
-     */
     protected function formatData(array $prices): array
     {
         if ($prices) {

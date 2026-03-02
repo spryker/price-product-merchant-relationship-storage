@@ -17,12 +17,6 @@ use Spryker\Zed\Kernel\Persistence\AbstractEntityManager;
  */
 class PriceProductMerchantRelationshipStorageEntityManager extends AbstractEntityManager implements PriceProductMerchantRelationshipStorageEntityManagerInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\PriceProductMerchantRelationshipStorageTransfer $priceProductMerchantRelationshipStorageTransfer
-     * @param \Orm\Zed\PriceProductMerchantRelationshipStorage\Persistence\SpyPriceProductAbstractMerchantRelationshipStorage $priceProductAbstractMerchantRelationshipStorageEntity
-     *
-     * @return void
-     */
     public function updatePriceProductAbstract(
         PriceProductMerchantRelationshipStorageTransfer $priceProductMerchantRelationshipStorageTransfer,
         SpyPriceProductAbstractMerchantRelationshipStorage $priceProductAbstractMerchantRelationshipStorageEntity
@@ -33,11 +27,6 @@ class PriceProductMerchantRelationshipStorageEntityManager extends AbstractEntit
             ->save();
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PriceProductMerchantRelationshipStorageTransfer $priceProductMerchantRelationshipStorageTransfer
-     *
-     * @return void
-     */
     public function createPriceProductAbstract(
         PriceProductMerchantRelationshipStorageTransfer $priceProductMerchantRelationshipStorageTransfer
     ): void {
@@ -71,12 +60,6 @@ class PriceProductMerchantRelationshipStorageEntityManager extends AbstractEntit
         $priceProductAbstractMerchantRelationshipStorageCollection->delete();
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PriceProductMerchantRelationshipStorageTransfer $priceProductMerchantRelationshipStorageTransfer
-     * @param \Orm\Zed\PriceProductMerchantRelationshipStorage\Persistence\SpyPriceProductConcreteMerchantRelationshipStorage $priceProductConcreteMerchantRelationshipStorageEntity
-     *
-     * @return void
-     */
     public function updatePriceProductConcrete(
         PriceProductMerchantRelationshipStorageTransfer $priceProductMerchantRelationshipStorageTransfer,
         SpyPriceProductConcreteMerchantRelationshipStorage $priceProductConcreteMerchantRelationshipStorageEntity
@@ -87,11 +70,6 @@ class PriceProductMerchantRelationshipStorageEntityManager extends AbstractEntit
             ->save();
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PriceProductMerchantRelationshipStorageTransfer $priceProductMerchantRelationshipStorageTransfer
-     *
-     * @return void
-     */
     public function createPriceProductConcrete(
         PriceProductMerchantRelationshipStorageTransfer $priceProductMerchantRelationshipStorageTransfer
     ): void {

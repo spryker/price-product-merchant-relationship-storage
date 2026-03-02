@@ -34,9 +34,6 @@ class CompanyBusinessUnitFinder implements CompanyBusinessUnitFinderInterface
         $this->customerClient = $customerClient;
     }
 
-    /**
-     * @return int|null
-     */
     public function findCurrentCustomerCompanyBusinessUnitId(): ?int
     {
         $customerTransfer = $this->getCustomerTransfer();
@@ -58,9 +55,6 @@ class CompanyBusinessUnitFinder implements CompanyBusinessUnitFinderInterface
         return $companyBusinessUnit->getIdCompanyBusinessUnit();
     }
 
-    /**
-     * @return \Generated\Shared\Transfer\CustomerTransfer|null
-     */
     protected function getCustomerTransfer(): ?CustomerTransfer
     {
         if (static::$customerTransferLoaded === false) {

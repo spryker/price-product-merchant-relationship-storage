@@ -43,12 +43,6 @@ class CompanyBusinessUnitPriceProductMapper implements CompanyBusinessUnitPriceP
         return $pricesByKey;
     }
 
-    /**
-     * @param array $priceProductMerchantRelationshipData
-     * @param string $uniquePriceIndex
-     *
-     * @return \Generated\Shared\Transfer\PriceProductMerchantRelationshipStorageTransfer
-     */
     protected function createPriceProductMerchantRelationshipStorageTransfer(
         array $priceProductMerchantRelationshipData,
         string $uniquePriceIndex
@@ -59,11 +53,6 @@ class CompanyBusinessUnitPriceProductMapper implements CompanyBusinessUnitPriceP
             ->setIdMerchantRelationship(null);
     }
 
-    /**
-     * @param array $priceProductMerchantRelationshipData
-     *
-     * @return string
-     */
     protected function createUniquePriceIndex(array $priceProductMerchantRelationshipData): string
     {
         return implode(static::PRICE_KEY_SEPARATOR, [
@@ -73,12 +62,6 @@ class CompanyBusinessUnitPriceProductMapper implements CompanyBusinessUnitPriceP
         ]);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PriceProductMerchantRelationshipStorageTransfer $merchantRelationshipStorageTransfer
-     * @param array $priceProductMerchantRelationshipData
-     *
-     * @return void
-     */
     protected function addUngroupedPrice(
         PriceProductMerchantRelationshipStorageTransfer $merchantRelationshipStorageTransfer,
         array $priceProductMerchantRelationshipData

@@ -98,28 +98,12 @@ interface PriceProductMerchantRelationshipStorageRepositoryInterface
      */
     public function findExistingPriceProductConcreteMerchantRelationshipEntitiesByProductIds(array $productIds): array;
 
-    /**
-     * @return array
-     */
     public function findAllPriceProductConcreteMerchantRelationshipStorageEntities(): array;
 
-    /**
-     * @param array $priceProductConcreteMerchantRelationshipStorageEntityIds
-     *
-     * @return array
-     */
     public function findPriceProductConcreteMerchantRelationshipStorageEntitiesByIds(array $priceProductConcreteMerchantRelationshipStorageEntityIds): array;
 
-    /**
-     * @return array
-     */
     public function findAllPriceProductAbstractMerchantRelationshipStorageEntities(): array;
 
-    /**
-     * @param array $priceProductAbstractMerchantRelationshipStorageEntityIds
-     *
-     * @return array
-     */
     public function findPriceProductAbstractMerchantRelationshipStorageEntitiesByIds(array $priceProductAbstractMerchantRelationshipStorageEntityIds): array;
 
     /**

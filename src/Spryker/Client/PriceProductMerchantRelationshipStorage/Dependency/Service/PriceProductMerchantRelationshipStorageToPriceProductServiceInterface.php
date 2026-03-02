@@ -11,10 +11,5 @@ use Generated\Shared\Transfer\PriceProductTransfer;
 
 interface PriceProductMerchantRelationshipStorageToPriceProductServiceInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\PriceProductTransfer $priceProductTransfer
-     *
-     * @return string
-     */
     public function buildPriceProductGroupKey(PriceProductTransfer $priceProductTransfer): string;
 }

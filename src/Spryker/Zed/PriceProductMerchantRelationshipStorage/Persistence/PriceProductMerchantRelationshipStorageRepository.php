@@ -325,11 +325,6 @@ class PriceProductMerchantRelationshipStorageRepository extends AbstractReposito
             ->endUse();
     }
 
-    /**
-     * @param \Propel\Runtime\ActiveQuery\ModelCriteria $modelCriteria
-     *
-     * @return \Propel\Runtime\ActiveQuery\ModelCriteria
-     */
     protected function withPriceProductAbstractData(ModelCriteria $modelCriteria): ModelCriteria
     {
         return $this->withPriceProductData($modelCriteria)
@@ -337,11 +332,6 @@ class PriceProductMerchantRelationshipStorageRepository extends AbstractReposito
             ->withColumn(SpyMerchantRelationshipTableMap::COL_FK_MERCHANT, PriceProductMerchantRelationshipValueTransfer::FK_MERCHANT);
     }
 
-    /**
-     * @param \Propel\Runtime\ActiveQuery\ModelCriteria $modelCriteria
-     *
-     * @return \Propel\Runtime\ActiveQuery\ModelCriteria
-     */
     protected function withPriceProductConcreteData(ModelCriteria $modelCriteria): ModelCriteria
     {
         return $this->withPriceProductData($modelCriteria)

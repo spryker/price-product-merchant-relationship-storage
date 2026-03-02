@@ -108,11 +108,6 @@ class PriceProductAbstractMerchantRelationSynchronizationDataPlugin extends Abst
         return $data;
     }
 
-    /**
-     * @param array $ids
-     *
-     * @return array
-     */
     protected function findPriceProductAbstractMerchantRelationshipStorageEntities(array $ids = []): array
     {
         if ($ids === []) {

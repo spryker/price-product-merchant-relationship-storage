@@ -28,11 +28,6 @@ class PriceProductMerchantRelationshipConcreteReader implements PriceProductMerc
      */
     protected $priceProductMapper;
 
-    /**
-     * @param \Spryker\Client\PriceProductMerchantRelationshipStorage\Dependency\Client\PriceProductMerchantRelationshipStorageToStorageClientInterface $storageClient
-     * @param \Spryker\Client\PriceProductMerchantRelationshipStorage\Storage\PriceProductMerchantRelationshipKeyGeneratorInterface $priceStorageKeyGenerator
-     * @param \Spryker\Client\PriceProductMerchantRelationshipStorage\Storage\PriceProductMapperInterface $priceProductMapper
-     */
     public function __construct(
         PriceProductMerchantRelationshipStorageToStorageClientInterface $storageClient,
         PriceProductMerchantRelationshipKeyGeneratorInterface $priceStorageKeyGenerator,
