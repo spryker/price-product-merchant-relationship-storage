@@ -90,6 +90,36 @@ class PriceProductMerchantRelationshipStorageConfig extends AbstractSharedConfig
     public const PRICE_PRODUCT_CONCRETE_MERCHANT_RELATIONSHIP_UNPUBLISH = 'PriceProductMerchantRelationship.price_product_concrete_merchant_relationship.unpublish';
 
     /**
+     * Specification:
+     * - Queue name used for price product merchant relationship publish events.
+     *
+     * @api
+     *
+     * @var string
+     */
+    public const string PUBLISH_PRICE_PRODUCT_MERCHANT_RELATIONSHIP_QUEUE = 'publish.price_product_merchant_relationship';
+
+    /**
+     * Specification:
+     * - Queue name used for price product concrete merchant relationship publish events.
+     *
+     * @api
+     *
+     * @var string
+     */
+    public const string PUBLISH_PRICE_PRODUCT_CONCRETE_MERCHANT_RELATIONSHIP_QUEUE = 'publish.price_product_concrete_merchant_relationship';
+
+    /**
+     * Specification:
+     * - Queue name used for price product abstract merchant relationship publish events.
+     *
+     * @api
+     *
+     * @var string
+     */
+    public const string PUBLISH_PRICE_PRODUCT_ABSTRACT_MERCHANT_RELATIONSHIP_QUEUE = 'publish.price_product_abstract_merchant_relationship';
+
+    /**
      * @api
      *
      * @return string
