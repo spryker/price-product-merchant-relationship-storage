@@ -48,4 +48,6 @@ interface PriceProductMerchantRelationshipStorageEntityManagerInterface
     public function deletePriceProductConcreteEntities(
         array $priceProductConcreteMerchantRelationshipStorageEntities
     ): void;
+
+    public function commit(): bool;
 }

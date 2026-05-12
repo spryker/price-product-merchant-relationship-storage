@@ -123,6 +123,8 @@ class PriceProductConcreteStorageWriter extends AbstractPriceProductMerchantRela
         // Delete the rest of the entities
         $this->priceProductMerchantRelationshipStorageEntityManager
             ->deletePriceProductConcreteEntities($existingStorageEntities);
+
+        $this->priceProductMerchantRelationshipStorageEntityManager->commit();
     }
 
     /**
