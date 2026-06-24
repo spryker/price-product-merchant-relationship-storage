@@ -15,11 +15,15 @@ use Spryker\Zed\Kernel\AbstractBundleConfig;
 class PriceProductMerchantRelationshipStorageConfig extends AbstractBundleConfig
 {
     /**
+     * @api
+     *
      * @var string
      */
     public const PRICE_PRODUCT_MERCHANT_RELATIONSHIP_SYNC_STORAGE_QUEUE = 'sync.storage.price';
 
     /**
+     * @api
+     *
      * @uses \Orm\Zed\MerchantRelationship\Persistence\Map\SpyMerchantRelationshipToCompanyBusinessUnitTableMap::COL_FK_COMPANY_BUSINESS_UNIT
      *
      * @var string
@@ -27,6 +31,8 @@ class PriceProductMerchantRelationshipStorageConfig extends AbstractBundleConfig
     public const COL_FK_COMPANY_BUSINESS_UNIT = 'spy_merchant_relationship_to_company_business_unit.fk_company_business_unit';
 
     /**
+     * @api
+     *
      * @uses \Orm\Zed\PriceProductMerchantRelationship\Persistence\Map\SpyPriceProductMerchantRelationshipTableMap::COL_FK_MERCHANT_RELATIONSHIP
      *
      * @var string
@@ -34,6 +40,8 @@ class PriceProductMerchantRelationshipStorageConfig extends AbstractBundleConfig
     public const COL_FK_MERCHANT_RELATIONSHIP = 'spy_price_product_merchant_relationship.fk_merchant_relationship';
 
     /**
+     * @api
+     *
      * @uses \Orm\Zed\PriceProductMerchantRelationship\Persistence\Map\SpyPriceProductMerchantRelationshipTableMap::COL_FK_PRICE_PRODUCT_STORE
      *
      * @var string
@@ -41,6 +49,8 @@ class PriceProductMerchantRelationshipStorageConfig extends AbstractBundleConfig
     public const COL_FK_PRICE_PRODUCT_STORE = 'spy_price_product_merchant_relationship.fk_price_product_store';
 
     /**
+     * @api
+     *
      * @uses \Orm\Zed\PriceProductMerchantRelationship\Persistence\Map\SpyPriceProductMerchantRelationshipTableMap::COL_FK_PRODUCT
      *
      * @var string
@@ -48,6 +58,8 @@ class PriceProductMerchantRelationshipStorageConfig extends AbstractBundleConfig
     public const COL_FK_PRODUCT = 'spy_price_product_merchant_relationship.fk_product';
 
     /**
+     * @api
+     *
      * @uses \Orm\Zed\PriceProductMerchantRelationship\Persistence\Map\SpyPriceProductMerchantRelationshipTableMap::COL_FK_PRODUCT_ABSTRACT
      *
      * @var string
@@ -55,6 +67,8 @@ class PriceProductMerchantRelationshipStorageConfig extends AbstractBundleConfig
     public const COL_FK_PRODUCT_ABSTRACT = 'spy_price_product_merchant_relationship.fk_product_abstract';
 
     /**
+     * @api
+     *
      * @uses \Spryker\Shared\PriceProduct\PriceProductConfig::PRICE_DATA
      *
      * @var string
@@ -62,6 +76,8 @@ class PriceProductMerchantRelationshipStorageConfig extends AbstractBundleConfig
     public const PRICE_DATA = 'priceData';
 
     /**
+     * @api
+     *
      * @uses \Spryker\Shared\Price\PriceConfig::PRICE_MODE_GROSS
      *
      * @var string
@@ -69,6 +85,8 @@ class PriceProductMerchantRelationshipStorageConfig extends AbstractBundleConfig
     public const PRICE_MODE_GROSS = 'GROSS_MODE';
 
     /**
+     * @api
+     *
      * @uses \Spryker\Shared\Price\PriceConfig::PRICE_MODE_NET
      *
      * @var string
