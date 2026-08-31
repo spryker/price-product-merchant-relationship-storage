@@ -9,6 +9,7 @@ namespace Spryker\Zed\PriceProductMerchantRelationshipStorage\Business\Model;
 
 use Spryker\Zed\PriceProductMerchantRelationshipStorage\Persistence\PriceProductMerchantRelationshipStorageEntityManagerInterface;
 use Spryker\Zed\PriceProductMerchantRelationshipStorage\Persistence\PriceProductMerchantRelationshipStorageRepositoryInterface;
+use Spryker\Zed\PriceProductMerchantRelationshipStorage\PriceProductMerchantRelationshipStorageConfig;
 
 abstract class AbstractPriceProductMerchantRelationshipStorageWriter
 {
@@ -32,22 +33,27 @@ abstract class AbstractPriceProductMerchantRelationshipStorageWriter
      */
     protected $priceProductMerchantRelationshipStorageFilterPlugins;
 
+    protected PriceProductMerchantRelationshipStorageConfig $priceProductMerchantRelationshipStorageConfig;
+
     /**
      * @param \Spryker\Zed\PriceProductMerchantRelationshipStorage\Persistence\PriceProductMerchantRelationshipStorageEntityManagerInterface $priceProductMerchantRelationshipStorageEntityManager
      * @param \Spryker\Zed\PriceProductMerchantRelationshipStorage\Persistence\PriceProductMerchantRelationshipStorageRepositoryInterface $priceProductMerchantRelationshipStorageRepository
      * @param \Spryker\Zed\PriceProductMerchantRelationshipStorage\Business\Model\PriceGrouperInterface $priceGrouper
      * @param array<\Spryker\Zed\PriceProductMerchantRelationshipStorageExtension\Dependency\Plugin\PriceProductMerchantRelationshipStorageFilterPluginInterface> $priceProductMerchantRelationshipStorageFilterPlugins
+     * @param \Spryker\Zed\PriceProductMerchantRelationshipStorage\PriceProductMerchantRelationshipStorageConfig $priceProductMerchantRelationshipStorageConfig
      */
     public function __construct(
         PriceProductMerchantRelationshipStorageEntityManagerInterface $priceProductMerchantRelationshipStorageEntityManager,
         PriceProductMerchantRelationshipStorageRepositoryInterface $priceProductMerchantRelationshipStorageRepository,
         PriceGrouperInterface $priceGrouper,
-        array $priceProductMerchantRelationshipStorageFilterPlugins
+        array $priceProductMerchantRelationshipStorageFilterPlugins,
+        PriceProductMerchantRelationshipStorageConfig $priceProductMerchantRelationshipStorageConfig
     ) {
         $this->priceProductMerchantRelationshipStorageEntityManager = $priceProductMerchantRelationshipStorageEntityManager;
         $this->priceProductMerchantRelationshipStorageRepository = $priceProductMerchantRelationshipStorageRepository;
         $this->priceGrouper = $priceGrouper;
         $this->priceProductMerchantRelationshipStorageFilterPlugins = $priceProductMerchantRelationshipStorageFilterPlugins;
+        $this->priceProductMerchantRelationshipStorageConfig = $priceProductMerchantRelationshipStorageConfig;
     }
 
     /**
@@ -62,5 +68,21 @@ abstract class AbstractPriceProductMerchantRelationshipStorageWriter
         }
 
         return $priceProductMerchantRelationshipStorageTransfers;
+    }
+
+    /**
+     * @template TPriceProductMerchantRelationshipStorageEntity of \Orm\Zed\PriceProductMerchantRelationshipStorage\Persistence\SpyPriceProductAbstractMerchantRelationshipStorage|\Orm\Zed\PriceProductMerchantRelationshipStorage\Persistence\SpyPriceProductConcreteMerchantRelationshipStorage
+     *
+     * @param array<string, array<TPriceProductMerchantRelationshipStorageEntity>> $storageEntitiesGroupedByPriceKey
+     *
+     * @return array<TPriceProductMerchantRelationshipStorageEntity>
+     */
+    protected function flattenStorageEntitiesGroupedByPriceKey(array $storageEntitiesGroupedByPriceKey): array
+    {
+        if (!$storageEntitiesGroupedByPriceKey) {
+            return [];
+        }
+
+        return array_merge(...array_values($storageEntitiesGroupedByPriceKey));
     }
 }

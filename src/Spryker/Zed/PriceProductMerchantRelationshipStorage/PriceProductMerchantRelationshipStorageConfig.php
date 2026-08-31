@@ -94,6 +94,16 @@ class PriceProductMerchantRelationshipStorageConfig extends AbstractBundleConfig
     public const PRICE_MODE_NET = 'NET_MODE';
 
     /**
+     * @var int<1, max>
+     */
+    protected const int COMPANY_BUSINESS_UNIT_CHUNK_SIZE = 100;
+
+    /**
+     * @var int<1, max>
+     */
+    protected const int PRODUCT_CHUNK_SIZE = 200;
+
+    /**
      * @api
      *
      * @return string
@@ -101,6 +111,34 @@ class PriceProductMerchantRelationshipStorageConfig extends AbstractBundleConfig
     public function getPriceDimensionMerchantRelationship()
     {
         return $this->getSharedConfig()->getPriceDimensionMerchantRelationship();
+    }
+
+    /**
+     * Specification:
+     * - Returns the number of company business unit IDs resolved per reconciliation query when publishing merchant relationship prices.
+     * - Lower values reduce peak memory and query size at the cost of more round trips.
+     *
+     * @api
+     *
+     * @return int<1, max>
+     */
+    public function getCompanyBusinessUnitChunkSize(): int
+    {
+        return static::COMPANY_BUSINESS_UNIT_CHUNK_SIZE;
+    }
+
+    /**
+     * Specification:
+     * - Returns the number of product IDs published per batch when publishing merchant relationship prices.
+     * - Lower values reduce peak memory and query size at the cost of more round trips.
+     *
+     * @api
+     *
+     * @return int<1, max>
+     */
+    public function getProductChunkSize(): int
+    {
+        return static::PRODUCT_CHUNK_SIZE;
     }
 
     /**
