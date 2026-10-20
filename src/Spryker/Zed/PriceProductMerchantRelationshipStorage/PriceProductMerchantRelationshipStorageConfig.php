@@ -164,6 +164,16 @@ class PriceProductMerchantRelationshipStorageConfig extends AbstractBundleConfig
     /**
      * @api
      *
+     * @return string|null
+     */
+    public function getMerchantRelationBusinessUnitSynchronizationPoolName(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * @api
+     *
      * @deprecated Use {@link \Spryker\Zed\SynchronizationBehavior\SynchronizationBehaviorConfig::isSynchronizationEnabled()} instead.
      *
      * @return bool
@@ -201,5 +211,19 @@ class PriceProductMerchantRelationshipStorageConfig extends AbstractBundleConfig
     public function getPriceProductAbstractMerchantRelationEventQueueName(): ?string
     {
         return null;
+    }
+
+    /**
+     * Specification:
+     * - Returns `true` when merchant-relationship prices are stored per merchant relationship, `false` when they are stored per company business unit.
+     * - See {@link \Spryker\Shared\PriceProductMerchantRelationshipStorage\PriceProductMerchantRelationshipStorageConfig::isMerchantRelationPriceKeyEnabled()}.
+     *
+     * @api
+     *
+     * @return bool
+     */
+    public function isMerchantRelationPriceKeyEnabled(): bool
+    {
+        return $this->getSharedConfig()->isMerchantRelationPriceKeyEnabled();
     }
 }

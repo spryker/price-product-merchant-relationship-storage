@@ -41,13 +41,15 @@ abstract class AbstractPriceProductMerchantRelationshipStorageWriter
      * @param \Spryker\Zed\PriceProductMerchantRelationshipStorage\Business\Model\PriceGrouperInterface $priceGrouper
      * @param array<\Spryker\Zed\PriceProductMerchantRelationshipStorageExtension\Dependency\Plugin\PriceProductMerchantRelationshipStorageFilterPluginInterface> $priceProductMerchantRelationshipStorageFilterPlugins
      * @param \Spryker\Zed\PriceProductMerchantRelationshipStorage\PriceProductMerchantRelationshipStorageConfig $priceProductMerchantRelationshipStorageConfig
+     * @param \Spryker\Zed\PriceProductMerchantRelationshipStorage\Business\Model\MerchantRelationBusinessUnitStorageWriterInterface $merchantRelationBusinessUnitStorageWriter
      */
     public function __construct(
         PriceProductMerchantRelationshipStorageEntityManagerInterface $priceProductMerchantRelationshipStorageEntityManager,
         PriceProductMerchantRelationshipStorageRepositoryInterface $priceProductMerchantRelationshipStorageRepository,
         PriceGrouperInterface $priceGrouper,
         array $priceProductMerchantRelationshipStorageFilterPlugins,
-        PriceProductMerchantRelationshipStorageConfig $priceProductMerchantRelationshipStorageConfig
+        PriceProductMerchantRelationshipStorageConfig $priceProductMerchantRelationshipStorageConfig,
+        protected MerchantRelationBusinessUnitStorageWriterInterface $merchantRelationBusinessUnitStorageWriter
     ) {
         $this->priceProductMerchantRelationshipStorageEntityManager = $priceProductMerchantRelationshipStorageEntityManager;
         $this->priceProductMerchantRelationshipStorageRepository = $priceProductMerchantRelationshipStorageRepository;

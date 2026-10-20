@@ -9,10 +9,10 @@ namespace Spryker\Zed\PriceProductMerchantRelationshipStorage\Communication\Plug
 
 use Spryker\Zed\Event\Dependency\Plugin\EventBulkHandlerInterface;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
-use Spryker\Zed\PriceProductMerchantRelationshipStorage\PriceProductMerchantRelationshipStorageConfig;
 
 /**
  * @method \Spryker\Zed\PriceProductMerchantRelationshipStorage\Business\PriceProductMerchantRelationshipStorageFacadeInterface getFacade()
+ * @method \Spryker\Zed\PriceProductMerchantRelationshipStorage\Business\PriceProductMerchantRelationshipStorageBusinessFactory getBusinessFactory()
  * @method \Spryker\Zed\PriceProductMerchantRelationshipStorage\Communication\PriceProductMerchantRelationshipStorageCommunicationFactory getFactory()
  * @method \Spryker\Zed\PriceProductMerchantRelationshipStorage\Persistence\PriceProductMerchantRelationshipStorageRepositoryInterface getRepository()
  * @method \Spryker\Zed\PriceProductMerchantRelationshipStorage\PriceProductMerchantRelationshipStorageConfig getConfig()
@@ -31,14 +31,8 @@ class MerchantRelationshipListener extends AbstractPlugin implements EventBulkHa
      */
     public function handleBulk(array $eventEntityTransfers, $eventName): void
     {
-        $companyBusinessUnitIds = $this->getFactory()
-            ->getEventBehaviorFacade()
-            ->getEventTransferForeignKeys(
-                $eventEntityTransfers,
-                PriceProductMerchantRelationshipStorageConfig::COL_FK_COMPANY_BUSINESS_UNIT,
-            );
-
-        $this->getFacade()->publishAbstractPriceProductByBusinessUnits($companyBusinessUnitIds);
-        $this->getFacade()->publishConcretePriceProductByBusinessUnits($companyBusinessUnitIds);
+        $this->getBusinessFactory()
+            ->createMerchantRelationshipToCompanyBusinessUnitStorageWriter()
+            ->writeCollectionByMerchantRelationshipToCompanyBusinessUnitEvents($eventEntityTransfers);
     }
 }

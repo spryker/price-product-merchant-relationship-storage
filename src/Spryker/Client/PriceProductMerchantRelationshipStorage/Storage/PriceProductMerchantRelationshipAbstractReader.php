@@ -9,6 +9,7 @@ namespace Spryker\Client\PriceProductMerchantRelationshipStorage\Storage;
 
 use Generated\Shared\Transfer\PriceProductStorageTransfer;
 use Spryker\Client\PriceProductMerchantRelationshipStorage\Dependency\Client\PriceProductMerchantRelationshipStorageToStorageClientInterface;
+use Spryker\Client\PriceProductMerchantRelationshipStorage\PriceProductMerchantRelationshipStorageConfig;
 use Spryker\Shared\PriceProductMerchantRelationshipStorage\PriceProductMerchantRelationshipStorageConstants;
 
 class PriceProductMerchantRelationshipAbstractReader implements PriceProductMerchantRelationshipAbstractReaderInterface
@@ -31,7 +32,10 @@ class PriceProductMerchantRelationshipAbstractReader implements PriceProductMerc
     public function __construct(
         PriceProductMerchantRelationshipStorageToStorageClientInterface $storageClient,
         PriceProductMerchantRelationshipKeyGeneratorInterface $priceStorageKeyGenerator,
-        PriceProductMapperInterface $priceProductMapper
+        PriceProductMapperInterface $priceProductMapper,
+        protected PriceProductMerchantRelationshipStorageConfig $priceProductMerchantRelationshipStorageConfig,
+        protected MerchantRelationBusinessUnitLookupReaderInterface $merchantRelationBusinessUnitLookupReader,
+        protected MerchantRelationshipPriceStorageReaderInterface $merchantRelationshipPriceStorageReader
     ) {
         $this->storageClient = $storageClient;
         $this->priceStorageKeyGenerator = $priceStorageKeyGenerator;
@@ -46,6 +50,14 @@ class PriceProductMerchantRelationshipAbstractReader implements PriceProductMerc
      */
     public function findProductAbstractPrices(int $idProductAbstract, int $idCompanyBusinessUnit): array
     {
+        if ($this->priceProductMerchantRelationshipStorageConfig->isMerchantRelationPriceKeyEnabled()) {
+            $priceProductTransfers = $this->findProductAbstractPricesByMerchantRelationship($idProductAbstract, $idCompanyBusinessUnit);
+
+            if ($priceProductTransfers || !$this->priceProductMerchantRelationshipStorageConfig->isMerchantRelationPriceKeyFallbackEnabled()) {
+                return $priceProductTransfers;
+            }
+        }
+
         $key = $this->priceStorageKeyGenerator->generateKey(
             PriceProductMerchantRelationshipStorageConstants::PRICE_PRODUCT_ABSTRACT_MERCHANT_RELATIONSHIP_RESOURCE_NAME,
             $idProductAbstract,
@@ -53,6 +65,40 @@ class PriceProductMerchantRelationshipAbstractReader implements PriceProductMerc
         );
 
         return $this->findPriceProductTransfers($key);
+    }
+
+    /**
+     * @param int $idProductAbstract
+     * @param int $idCompanyBusinessUnit
+     *
+     * @return array<\Generated\Shared\Transfer\PriceProductTransfer>
+     */
+    protected function findProductAbstractPricesByMerchantRelationship(int $idProductAbstract, int $idCompanyBusinessUnit): array
+    {
+        $idMerchantRelationships = $this->merchantRelationBusinessUnitLookupReader->findMerchantRelationshipIdsByCompanyBusinessUnitId($idCompanyBusinessUnit);
+
+        if (!$idMerchantRelationships) {
+            return [];
+        }
+
+        $keys = [];
+        foreach ($idMerchantRelationships as $idMerchantRelationship) {
+            $keys[] = $this->priceStorageKeyGenerator->generateKeyByMerchantRelationship(
+                PriceProductMerchantRelationshipStorageConstants::PRICE_PRODUCT_ABSTRACT_MERCHANT_RELATIONSHIP_RESOURCE_NAME,
+                $idProductAbstract,
+                $idMerchantRelationship,
+            );
+        }
+
+        $prices = $this->merchantRelationshipPriceStorageReader->findMergedPricesByKeys($keys);
+
+        if (!$prices) {
+            return [];
+        }
+
+        $priceProductStorageTransfer = (new PriceProductStorageTransfer())->fromArray(['prices' => $prices], true);
+
+        return $this->priceProductMapper->mapPriceProductStorageTransferToPriceProductTransfers($priceProductStorageTransfer);
     }
 
     /**

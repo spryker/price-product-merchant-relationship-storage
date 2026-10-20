@@ -13,6 +13,7 @@ use Spryker\Zed\Event\Dependency\Plugin\EventSubscriberInterface;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 use Spryker\Zed\MerchantRelationship\Dependency\MerchantRelationshipEvents;
 use Spryker\Zed\PriceProductMerchantRelationship\Dependency\PriceProductMerchantRelationshipEvents;
+use Spryker\Zed\PriceProductMerchantRelationshipStorage\Communication\Plugin\Event\Listener\MerchantRelationBusinessUnitPublishListener;
 use Spryker\Zed\PriceProductMerchantRelationshipStorage\Communication\Plugin\Event\Listener\MerchantRelationshipListener;
 use Spryker\Zed\PriceProductMerchantRelationshipStorage\Communication\Plugin\Event\Listener\PriceProductMerchantRelationshipAbstractDeleteListener;
 use Spryker\Zed\PriceProductMerchantRelationshipStorage\Communication\Plugin\Event\Listener\PriceProductMerchantRelationshipAbstractListener;
@@ -50,7 +51,8 @@ class PriceProductMerchantRelationshipStorageEventSubscriber extends AbstractPlu
             ->addConcretePriceProductMerchantRelationshipPublishListener($eventCollection)
             ->addAbstractPriceProductMerchantRelationshipPublishListener($eventCollection)
             ->addConcretePriceProductMerchantRelationshipUnpublishListener($eventCollection)
-            ->addAbstractPriceProductMerchantRelationshipUnpublishListener($eventCollection);
+            ->addAbstractPriceProductMerchantRelationshipUnpublishListener($eventCollection)
+            ->addMerchantRelationBusinessUnitPublishListener($eventCollection);
 
         return $eventCollection;
     }
@@ -284,6 +286,19 @@ class PriceProductMerchantRelationshipStorageEventSubscriber extends AbstractPlu
             0,
             null,
             $this->getConfig()->getPriceProductAbstractMerchantRelationEventQueueName(),
+        );
+
+        return $this;
+    }
+
+    protected function addMerchantRelationBusinessUnitPublishListener(EventCollectionInterface $eventCollection): static
+    {
+        $eventCollection->addListenerQueued(
+            PriceProductMerchantRelationshipStorageConfig::MERCHANT_RELATION_BUSINESS_UNIT_PUBLISH,
+            new MerchantRelationBusinessUnitPublishListener(),
+            0,
+            null,
+            $this->getConfig()->getMerchantRelationEventQueueName(),
         );
 
         return $this;

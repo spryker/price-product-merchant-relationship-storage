@@ -7,6 +7,9 @@
 
 namespace Spryker\Client\PriceProductMerchantRelationshipStorage\Dependency\Client;
 
+/**
+ * @deprecated Will be removed in the next major. Use {@link \Spryker\Client\Storage\StorageClientInterface} directly.
+ */
 class PriceProductMerchantRelationshipStorageToStorageClientBridge implements PriceProductMerchantRelationshipStorageToStorageClientInterface
 {
     /**
@@ -30,5 +33,15 @@ class PriceProductMerchantRelationshipStorageToStorageClientBridge implements Pr
     public function get($key)
     {
         return $this->storageClient->get($key);
+    }
+
+    /**
+     * @param array<string> $keys
+     *
+     * @return array<string, mixed>
+     */
+    public function getMulti(array $keys): array
+    {
+        return $this->storageClient->getMulti($keys);
     }
 }

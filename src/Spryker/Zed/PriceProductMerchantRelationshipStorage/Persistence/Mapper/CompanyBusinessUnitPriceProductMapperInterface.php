@@ -10,7 +10,7 @@ namespace Spryker\Zed\PriceProductMerchantRelationshipStorage\Persistence\Mapper
 interface CompanyBusinessUnitPriceProductMapperInterface
 {
     /**
-     * @param array $priceProductMerchantRelationshipTransfers
+     * @param array<array<string, mixed>> $priceProductMerchantRelationshipTransfers
      *
      * @return array<\Generated\Shared\Transfer\PriceProductMerchantRelationshipStorageTransfer>
      */

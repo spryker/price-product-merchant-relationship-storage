@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<database
+    xmlns="spryker:schema-01"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    name="zed"
+    xsi:schemaLocation="spryker:schema-01 https://static.spryker.com/schema-01.xsd"
+    namespace="Orm\Zed\PriceProductMerchantRelationshipStorage\Persistence"
+    package="src.Orm.Zed.PriceProductMerchantRelationshipStorage.Persistence"
+>
+
+    <table name="spy_merchant_relation_business_unit_storage" identifierQuoting="true">
+        <column name="id_merchant_relation_business_unit_storage" type="BIGINT" autoIncrement="true" primaryKey="true"/>
+        <column name="key" type="VARCHAR" size="255" required="true" description="A unique key used to identify an entity or a piece of data."/>
+        <column name="fk_company_business_unit" type="INTEGER" required="true"/>
+        <column name="data" type="LONGVARCHAR" required="false" description="A generic data payload."/>
+
+        <unique name="spy_merchant_relation_bu_storage-fk_company_business_unit">
+            <unique-column name="fk_company_business_unit"/>
+        </unique>
+
+        <id-method-parameter value="spy_merchant_relation_business_unit_storage_pk_seq"/>
+        <behavior name="synchronization">
+            <parameter name="resource" value="mrbu"/>
+            <parameter name="key_suffix_column" value="fk_company_business_unit"/>
+            <parameter name="queue_group" value="sync.storage.price"/>
+        </behavior>
+        <behavior name="timestampable"/>
+    </table>
+
+</database>

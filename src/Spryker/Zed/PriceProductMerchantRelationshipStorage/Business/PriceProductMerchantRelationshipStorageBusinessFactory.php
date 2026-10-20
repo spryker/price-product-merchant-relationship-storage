@@ -8,12 +8,16 @@
 namespace Spryker\Zed\PriceProductMerchantRelationshipStorage\Business;
 
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
+use Spryker\Zed\PriceProductMerchantRelationshipStorage\Business\Model\MerchantRelationBusinessUnitStorageWriter;
+use Spryker\Zed\PriceProductMerchantRelationshipStorage\Business\Model\MerchantRelationBusinessUnitStorageWriterInterface;
 use Spryker\Zed\PriceProductMerchantRelationshipStorage\Business\Model\PriceGrouper;
 use Spryker\Zed\PriceProductMerchantRelationshipStorage\Business\Model\PriceGrouperInterface;
 use Spryker\Zed\PriceProductMerchantRelationshipStorage\Business\Model\PriceProductAbstractStorageWriter;
 use Spryker\Zed\PriceProductMerchantRelationshipStorage\Business\Model\PriceProductAbstractStorageWriterInterface;
 use Spryker\Zed\PriceProductMerchantRelationshipStorage\Business\Model\PriceProductConcreteStorageWriter;
 use Spryker\Zed\PriceProductMerchantRelationshipStorage\Business\Model\PriceProductConcreteStorageWriterInterface;
+use Spryker\Zed\PriceProductMerchantRelationshipStorage\Business\Writer\MerchantRelationshipToCompanyBusinessUnitStorageWriter;
+use Spryker\Zed\PriceProductMerchantRelationshipStorage\Business\Writer\MerchantRelationshipToCompanyBusinessUnitStorageWriterInterface;
 use Spryker\Zed\PriceProductMerchantRelationshipStorage\Business\Writer\PriceProductMerchantRelationshipStorageWriter;
 use Spryker\Zed\PriceProductMerchantRelationshipStorage\Business\Writer\PriceProductMerchantRelationshipStorageWriterInterface;
 use Spryker\Zed\PriceProductMerchantRelationshipStorage\Dependency\Facade\PriceProductMerchantRelationshipStorageToEventBehaviorFacadeInterface;
@@ -35,6 +39,7 @@ class PriceProductMerchantRelationshipStorageBusinessFactory extends AbstractBus
             $this->createPriceGrouper(),
             $this->getPriceProductMerchantRelationshipStorageFilterPlugins(),
             $this->getConfig(),
+            $this->createMerchantRelationBusinessUnitStorageWriter(),
         );
     }
 
@@ -46,6 +51,7 @@ class PriceProductMerchantRelationshipStorageBusinessFactory extends AbstractBus
             $this->createPriceGrouper(),
             $this->getPriceProductMerchantRelationshipStorageFilterPlugins(),
             $this->getConfig(),
+            $this->createMerchantRelationBusinessUnitStorageWriter(),
         );
     }
 
@@ -59,9 +65,30 @@ class PriceProductMerchantRelationshipStorageBusinessFactory extends AbstractBus
         );
     }
 
+    public function createMerchantRelationshipToCompanyBusinessUnitStorageWriter(): MerchantRelationshipToCompanyBusinessUnitStorageWriterInterface
+    {
+        return new MerchantRelationshipToCompanyBusinessUnitStorageWriter(
+            $this->getEventBehaviorFacade(),
+            $this->createPriceProductAbstractStorageWriter(),
+            $this->createPriceProductConcreteStorageWriter(),
+            $this->createMerchantRelationBusinessUnitStorageWriter(),
+            $this->getRepository(),
+            $this->getConfig(),
+        );
+    }
+
     public function createPriceGrouper(): PriceGrouperInterface
     {
         return new PriceGrouper();
+    }
+
+    public function createMerchantRelationBusinessUnitStorageWriter(): MerchantRelationBusinessUnitStorageWriterInterface
+    {
+        return new MerchantRelationBusinessUnitStorageWriter(
+            $this->getRepository(),
+            $this->getEntityManager(),
+            $this->getConfig(),
+        );
     }
 
     public function getEventBehaviorFacade(): PriceProductMerchantRelationshipStorageToEventBehaviorFacadeInterface

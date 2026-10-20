@@ -8,6 +8,7 @@
 namespace Spryker\Zed\PriceProductMerchantRelationshipStorage\Persistence;
 
 use Generated\Shared\Transfer\PriceProductMerchantRelationshipStorageTransfer;
+use Orm\Zed\PriceProductMerchantRelationshipStorage\Persistence\SpyMerchantRelationBusinessUnitStorage;
 use Orm\Zed\PriceProductMerchantRelationshipStorage\Persistence\SpyPriceProductAbstractMerchantRelationshipStorage;
 use Orm\Zed\PriceProductMerchantRelationshipStorage\Persistence\SpyPriceProductConcreteMerchantRelationshipStorage;
 
@@ -47,6 +48,15 @@ interface PriceProductMerchantRelationshipStorageEntityManagerInterface
      */
     public function deletePriceProductConcreteEntities(
         array $priceProductConcreteMerchantRelationshipStorageEntities
+    ): void;
+
+    /**
+     * @param array<int> $merchantRelationshipIds
+     */
+    public function saveMerchantRelationBusinessUnitStorage(
+        int $idCompanyBusinessUnit,
+        array $merchantRelationshipIds,
+        ?SpyMerchantRelationBusinessUnitStorage $merchantRelationBusinessUnitStorageEntity
     ): void;
 
     public function commit(): bool;

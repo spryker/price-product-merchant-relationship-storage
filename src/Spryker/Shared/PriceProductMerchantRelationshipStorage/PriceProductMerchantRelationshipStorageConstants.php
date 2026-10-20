@@ -17,6 +17,16 @@ class PriceProductMerchantRelationshipStorageConstants
      * - Resource name, it's used for key generating.
      *
      * @api
+     */
+    public const string MERCHANT_RELATION_BUSINESS_UNIT_RESOURCE_NAME = 'mrbu';
+
+    public const string MERCHANT_RELATION_BUSINESS_UNIT_DATA_KEY_MERCHANT_RELATIONSHIP_IDS = 'idmr';
+
+    /**
+     * Specification:
+     * - Resource name, it's used for key generating.
+     *
+     * @api
      *
      * @var string
      */

@@ -13,6 +13,8 @@ use Spryker\Client\PriceProductMerchantRelationshipStorage\Dependency\Service\Pr
 
 class PriceProductMerchantRelationshipKeyGenerator implements PriceProductMerchantRelationshipKeyGeneratorInterface
 {
+    protected const string MERCHANT_RELATIONSHIP_KEY_MARKER = 'mr';
+
     /**
      * @var string
      */
@@ -42,6 +44,28 @@ class PriceProductMerchantRelationshipKeyGenerator implements PriceProductMercha
         $synchronizationDataTransfer
             ->setStore($this->storeClient->getCurrentStore()->getName())
             ->setReference($idProduct . static::KEY_SEPARATOR . $idCompanyBusinessUnit);
+
+        return $this->synchronizationService
+            ->getStorageKeyBuilder($resourceName)
+            ->generateKey($synchronizationDataTransfer);
+    }
+
+    public function generateKeyByMerchantRelationship(string $resourceName, int $idProduct, int $idMerchantRelationship): string
+    {
+        $synchronizationDataTransfer = new SynchronizationDataTransfer();
+        $synchronizationDataTransfer
+            ->setStore($this->storeClient->getCurrentStore()->getName())
+            ->setReference($idProduct . static::KEY_SEPARATOR . static::MERCHANT_RELATIONSHIP_KEY_MARKER . $idMerchantRelationship);
+
+        return $this->synchronizationService
+            ->getStorageKeyBuilder($resourceName)
+            ->generateKey($synchronizationDataTransfer);
+    }
+
+    public function generateKeyByCompanyBusinessUnit(string $resourceName, int $idCompanyBusinessUnit): string
+    {
+        $synchronizationDataTransfer = new SynchronizationDataTransfer();
+        $synchronizationDataTransfer->setReference((string)$idCompanyBusinessUnit);
 
         return $this->synchronizationService
             ->getStorageKeyBuilder($resourceName)

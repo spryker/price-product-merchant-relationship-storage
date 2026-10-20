@@ -37,6 +37,11 @@ class PriceProductAbstractMerchantRelationEventResourceBulkRepositoryPluginTest 
         $this->tester->ensurePriceProductMerchantRelationshipTableIsEmpty();
     }
 
+    protected function createPlugin(): PriceProductAbstractMerchantRelationEventResourceBulkRepositoryPlugin
+    {
+        return new PriceProductAbstractMerchantRelationEventResourceBulkRepositoryPlugin();
+    }
+
     public function testGetDataReturnsTransferAccordingToOffsetAndLimit(): void
     {
         // Arrange
@@ -45,7 +50,7 @@ class PriceProductAbstractMerchantRelationEventResourceBulkRepositoryPluginTest 
         $this->tester->haveProductAbstractPriceProductMerchantRelationship();
 
         // Act
-        $priceProductMerchantRelationshipTransfers = (new PriceProductAbstractMerchantRelationEventResourceBulkRepositoryPlugin())
+        $priceProductMerchantRelationshipTransfers = $this->createPlugin()
             ->getData(1, 1);
 
         // Assert
@@ -70,7 +75,7 @@ class PriceProductAbstractMerchantRelationEventResourceBulkRepositoryPluginTest 
         );
 
         // Act
-        $priceProductMerchantRelationshipTransfers = (new PriceProductAbstractMerchantRelationEventResourceBulkRepositoryPlugin())
+        $priceProductMerchantRelationshipTransfers = $this->createPlugin()
             ->getData(0, 2);
 
         // Assert

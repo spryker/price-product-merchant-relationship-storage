@@ -9,16 +9,20 @@ namespace Spryker\Zed\PriceProductMerchantRelationshipStorage\Persistence\Mapper
 
 use Generated\Shared\Transfer\PriceProductMerchantRelationshipStorageTransfer;
 use Generated\Shared\Transfer\PriceProductMerchantRelationshipValueTransfer;
+use Spryker\Zed\PriceProductMerchantRelationshipStorage\PriceProductMerchantRelationshipStorageConfig;
 
 class CompanyBusinessUnitPriceProductMapper implements CompanyBusinessUnitPriceProductMapperInterface
 {
-    /**
-     * @var string
-     */
-    protected const PRICE_KEY_SEPARATOR = ':';
+    protected const string PRICE_KEY_SEPARATOR = ':';
+
+    protected const string MERCHANT_RELATIONSHIP_KEY_MARKER = 'mr';
+
+    public function __construct(protected PriceProductMerchantRelationshipStorageConfig $priceProductMerchantRelationshipStorageConfig)
+    {
+    }
 
     /**
-     * @param array $priceProductMerchantRelationshipTransfers
+     * @param array<array<string, mixed>> $priceProductMerchantRelationshipTransfers
      *
      * @return array<\Generated\Shared\Transfer\PriceProductMerchantRelationshipStorageTransfer>
      */
@@ -43,18 +47,37 @@ class CompanyBusinessUnitPriceProductMapper implements CompanyBusinessUnitPriceP
         return $pricesByKey;
     }
 
+    /**
+     * @param array<string, mixed> $priceProductMerchantRelationshipData
+     */
     protected function createPriceProductMerchantRelationshipStorageTransfer(
         array $priceProductMerchantRelationshipData,
         string $uniquePriceIndex
     ): PriceProductMerchantRelationshipStorageTransfer {
-        return (new PriceProductMerchantRelationshipStorageTransfer())
+        $priceProductMerchantRelationshipStorageTransfer = (new PriceProductMerchantRelationshipStorageTransfer())
             ->fromArray($priceProductMerchantRelationshipData, true)
-            ->setPriceKey($uniquePriceIndex)
-            ->setIdMerchantRelationship(null);
+            ->setPriceKey($uniquePriceIndex);
+
+        if (!$this->priceProductMerchantRelationshipStorageConfig->isMerchantRelationPriceKeyEnabled()) {
+            return $priceProductMerchantRelationshipStorageTransfer->setIdMerchantRelationship(null);
+        }
+
+        return $priceProductMerchantRelationshipStorageTransfer;
     }
 
+    /**
+     * @param array<string, mixed> $priceProductMerchantRelationshipData
+     */
     protected function createUniquePriceIndex(array $priceProductMerchantRelationshipData): string
     {
+        if ($this->priceProductMerchantRelationshipStorageConfig->isMerchantRelationPriceKeyEnabled()) {
+            return implode(static::PRICE_KEY_SEPARATOR, [
+                $priceProductMerchantRelationshipData[PriceProductMerchantRelationshipStorageTransfer::STORE_NAME],
+                $priceProductMerchantRelationshipData[PriceProductMerchantRelationshipStorageTransfer::ID_PRODUCT],
+                static::MERCHANT_RELATIONSHIP_KEY_MARKER . $priceProductMerchantRelationshipData[PriceProductMerchantRelationshipStorageTransfer::ID_MERCHANT_RELATIONSHIP],
+            ]);
+        }
+
         return implode(static::PRICE_KEY_SEPARATOR, [
             $priceProductMerchantRelationshipData[PriceProductMerchantRelationshipStorageTransfer::STORE_NAME],
             $priceProductMerchantRelationshipData[PriceProductMerchantRelationshipStorageTransfer::ID_PRODUCT],
@@ -62,6 +85,9 @@ class CompanyBusinessUnitPriceProductMapper implements CompanyBusinessUnitPriceP
         ]);
     }
 
+    /**
+     * @param array<string, mixed> $priceProductMerchantRelationshipData
+     */
     protected function addUngroupedPrice(
         PriceProductMerchantRelationshipStorageTransfer $merchantRelationshipStorageTransfer,
         array $priceProductMerchantRelationshipData

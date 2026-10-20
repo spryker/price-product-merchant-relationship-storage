@@ -15,6 +15,10 @@ use Spryker\Client\PriceProductMerchantRelationshipStorage\Dependency\Service\Pr
 use Spryker\Client\PriceProductMerchantRelationshipStorage\Dependency\Service\PriceProductMerchantRelationshipToSynchronizationServiceInterface;
 use Spryker\Client\PriceProductMerchantRelationshipStorage\MerchantRelationshipFinder\CompanyBusinessUnitFinder;
 use Spryker\Client\PriceProductMerchantRelationshipStorage\MerchantRelationshipFinder\CompanyBusinessUnitFinderInterface;
+use Spryker\Client\PriceProductMerchantRelationshipStorage\Storage\MerchantRelationBusinessUnitLookupReader;
+use Spryker\Client\PriceProductMerchantRelationshipStorage\Storage\MerchantRelationBusinessUnitLookupReaderInterface;
+use Spryker\Client\PriceProductMerchantRelationshipStorage\Storage\MerchantRelationshipPriceStorageReader;
+use Spryker\Client\PriceProductMerchantRelationshipStorage\Storage\MerchantRelationshipPriceStorageReaderInterface;
 use Spryker\Client\PriceProductMerchantRelationshipStorage\Storage\PriceProductMapper;
 use Spryker\Client\PriceProductMerchantRelationshipStorage\Storage\PriceProductMapperInterface;
 use Spryker\Client\PriceProductMerchantRelationshipStorage\Storage\PriceProductMerchantRelationshipAbstractReader;
@@ -35,6 +39,9 @@ class PriceProductMerchantRelationshipStorageFactory extends AbstractFactory
             $this->getStorageClient(),
             $this->createPriceProductMerchantRelationshipKeyGenerator(),
             $this->createPriceProductMapper(),
+            $this->getPriceProductMerchantRelationshipStorageConfig(),
+            $this->createMerchantRelationBusinessUnitLookupReader(),
+            $this->createMerchantRelationshipPriceStorageReader(),
         );
     }
 
@@ -44,6 +51,22 @@ class PriceProductMerchantRelationshipStorageFactory extends AbstractFactory
             $this->getStorageClient(),
             $this->createPriceProductMerchantRelationshipKeyGenerator(),
             $this->createPriceProductMapper(),
+            $this->getPriceProductMerchantRelationshipStorageConfig(),
+            $this->createMerchantRelationBusinessUnitLookupReader(),
+            $this->createMerchantRelationshipPriceStorageReader(),
+        );
+    }
+
+    public function createMerchantRelationshipPriceStorageReader(): MerchantRelationshipPriceStorageReaderInterface
+    {
+        return new MerchantRelationshipPriceStorageReader($this->getStorageClient());
+    }
+
+    public function createMerchantRelationBusinessUnitLookupReader(): MerchantRelationBusinessUnitLookupReaderInterface
+    {
+        return new MerchantRelationBusinessUnitLookupReader(
+            $this->getStorageClient(),
+            $this->createPriceProductMerchantRelationshipKeyGenerator(),
         );
     }
 

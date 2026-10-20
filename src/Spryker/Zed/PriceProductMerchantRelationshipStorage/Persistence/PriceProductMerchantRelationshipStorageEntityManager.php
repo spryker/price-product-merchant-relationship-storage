@@ -8,8 +8,11 @@
 namespace Spryker\Zed\PriceProductMerchantRelationshipStorage\Persistence;
 
 use Generated\Shared\Transfer\PriceProductMerchantRelationshipStorageTransfer;
+use Orm\Zed\PriceProductMerchantRelationshipStorage\Persistence\SpyMerchantRelationBusinessUnitStorage;
 use Orm\Zed\PriceProductMerchantRelationshipStorage\Persistence\SpyPriceProductAbstractMerchantRelationshipStorage;
 use Orm\Zed\PriceProductMerchantRelationshipStorage\Persistence\SpyPriceProductConcreteMerchantRelationshipStorage;
+use Spryker\Shared\PriceProductMerchantRelationshipStorage\PriceProductMerchantRelationshipStorageConfig as SharedPriceProductMerchantRelationshipStorageConfig;
+use Spryker\Shared\PriceProductMerchantRelationshipStorage\PriceProductMerchantRelationshipStorageConstants;
 use Spryker\Zed\Kernel\Persistence\AbstractEntityManager;
 use Spryker\Zed\Propel\Persistence\BatchProcessor\ActiveRecordBatchProcessorTrait;
 
@@ -28,6 +31,8 @@ class PriceProductMerchantRelationshipStorageEntityManager extends AbstractEntit
             ->setData($priceProductMerchantRelationshipStorageTransfer->getPrices())
             ->setIsSendingToQueue($this->getFactory()->getConfig()->isSendingToQueue());
 
+        $this->setPriceProductMerchantRelationshipStorageKey($priceProductAbstractMerchantRelationshipStorageEntity, $priceProductMerchantRelationshipStorageTransfer);
+
         $this->persist($priceProductAbstractMerchantRelationshipStorageEntity);
     }
 
@@ -35,11 +40,12 @@ class PriceProductMerchantRelationshipStorageEntityManager extends AbstractEntit
         PriceProductMerchantRelationshipStorageTransfer $priceProductMerchantRelationshipStorageTransfer
     ): void {
         $entity = (new SpyPriceProductAbstractMerchantRelationshipStorage())
-            ->setFkProductAbstract($priceProductMerchantRelationshipStorageTransfer->getIdProduct())
-            ->setFkCompanyBusinessUnit($priceProductMerchantRelationshipStorageTransfer->getIdCompanyBusinessUnit())
-            ->setPriceKey($priceProductMerchantRelationshipStorageTransfer->getPriceKey())
+            ->setFkProductAbstract($priceProductMerchantRelationshipStorageTransfer->getIdProductOrFail())
+            ->setPriceKey($priceProductMerchantRelationshipStorageTransfer->getPriceKeyOrFail())
             ->setData($priceProductMerchantRelationshipStorageTransfer->getPrices())
             ->setIsSendingToQueue($this->getFactory()->getConfig()->isSendingToQueue());
+
+        $this->setPriceProductMerchantRelationshipStorageKey($entity, $priceProductMerchantRelationshipStorageTransfer);
 
         $this->persist($entity);
     }
@@ -65,6 +71,8 @@ class PriceProductMerchantRelationshipStorageEntityManager extends AbstractEntit
             ->setData($priceProductMerchantRelationshipStorageTransfer->getPrices())
             ->setIsSendingToQueue($this->getFactory()->getConfig()->isSendingToQueue());
 
+        $this->setPriceProductMerchantRelationshipStorageKey($priceProductConcreteMerchantRelationshipStorageEntity, $priceProductMerchantRelationshipStorageTransfer);
+
         $this->persist($priceProductConcreteMerchantRelationshipStorageEntity);
     }
 
@@ -72,13 +80,29 @@ class PriceProductMerchantRelationshipStorageEntityManager extends AbstractEntit
         PriceProductMerchantRelationshipStorageTransfer $priceProductMerchantRelationshipStorageTransfer
     ): void {
         $entity = (new SpyPriceProductConcreteMerchantRelationshipStorage())
-            ->setFkProduct($priceProductMerchantRelationshipStorageTransfer->getIdProduct())
-            ->setFkCompanyBusinessUnit($priceProductMerchantRelationshipStorageTransfer->getIdCompanyBusinessUnit())
-            ->setPriceKey($priceProductMerchantRelationshipStorageTransfer->getPriceKey())
+            ->setFkProduct($priceProductMerchantRelationshipStorageTransfer->getIdProductOrFail())
+            ->setPriceKey($priceProductMerchantRelationshipStorageTransfer->getPriceKeyOrFail())
             ->setData($priceProductMerchantRelationshipStorageTransfer->getPrices())
             ->setIsSendingToQueue($this->getFactory()->getConfig()->isSendingToQueue());
 
+        $this->setPriceProductMerchantRelationshipStorageKey($entity, $priceProductMerchantRelationshipStorageTransfer);
+
         $this->persist($entity);
+    }
+
+    protected function setPriceProductMerchantRelationshipStorageKey(
+        SpyPriceProductAbstractMerchantRelationshipStorage|SpyPriceProductConcreteMerchantRelationshipStorage $entity,
+        PriceProductMerchantRelationshipStorageTransfer $priceProductMerchantRelationshipStorageTransfer
+    ): void {
+        if (!$this->getFactory()->getConfig()->isMerchantRelationPriceKeyEnabled()) {
+            $entity->setFkCompanyBusinessUnit($priceProductMerchantRelationshipStorageTransfer->getIdCompanyBusinessUnitOrFail());
+
+            return;
+        }
+
+        $entity
+            ->setFkMerchantRelationship($priceProductMerchantRelationshipStorageTransfer->getIdMerchantRelationship())
+            ->setFkCompanyBusinessUnit(SharedPriceProductMerchantRelationshipStorageConfig::ID_COMPANY_BUSINESS_UNIT_NONE);
     }
 
     /**
@@ -92,5 +116,39 @@ class PriceProductMerchantRelationshipStorageEntityManager extends AbstractEntit
         foreach ($priceProductConcreteMerchantRelationshipStorageEntities as $entity) {
             $this->remove($entity);
         }
+    }
+
+    /**
+     * @param array<int> $merchantRelationshipIds
+     */
+    public function saveMerchantRelationBusinessUnitStorage(
+        int $idCompanyBusinessUnit,
+        array $merchantRelationshipIds,
+        ?SpyMerchantRelationBusinessUnitStorage $merchantRelationBusinessUnitStorageEntity
+    ): void {
+        if (!$merchantRelationshipIds) {
+            $this->removeMerchantRelationBusinessUnitStorage($merchantRelationBusinessUnitStorageEntity);
+
+            return;
+        }
+
+        $merchantRelationBusinessUnitStorageEntity = ($merchantRelationBusinessUnitStorageEntity ?? new SpyMerchantRelationBusinessUnitStorage())
+            ->setFkCompanyBusinessUnit($idCompanyBusinessUnit)
+            ->setData([PriceProductMerchantRelationshipStorageConstants::MERCHANT_RELATION_BUSINESS_UNIT_DATA_KEY_MERCHANT_RELATIONSHIP_IDS => $merchantRelationshipIds])
+            ->setIsSendingToQueue($this->getFactory()->getConfig()->isSendingToQueue());
+
+        $this->persist($merchantRelationBusinessUnitStorageEntity);
+    }
+
+    protected function removeMerchantRelationBusinessUnitStorage(
+        ?SpyMerchantRelationBusinessUnitStorage $merchantRelationBusinessUnitStorageEntity
+    ): void {
+        if ($merchantRelationBusinessUnitStorageEntity === null) {
+            return;
+        }
+
+        $merchantRelationBusinessUnitStorageEntity->setIsSendingToQueue($this->getFactory()->getConfig()->isSendingToQueue());
+
+        $this->remove($merchantRelationBusinessUnitStorageEntity);
     }
 }

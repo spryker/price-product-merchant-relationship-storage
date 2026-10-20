@@ -10,6 +10,12 @@ declare(strict_types=1);
 namespace SprykerTest\Zed\PriceProductMerchantRelationshipStorage;
 
 use Codeception\Actor;
+use Orm\Zed\MerchantRelationship\Persistence\SpyMerchantRelationshipToCompanyBusinessUnitQuery;
+use Spryker\Zed\PriceProductMerchantRelationshipStorage\Business\PriceProductMerchantRelationshipStorageBusinessFactory;
+use Spryker\Zed\PriceProductMerchantRelationshipStorage\Business\PriceProductMerchantRelationshipStorageFacade;
+use Spryker\Zed\PriceProductMerchantRelationshipStorage\Persistence\PriceProductMerchantRelationshipStorageEntityManager;
+use Spryker\Zed\PriceProductMerchantRelationshipStorage\Persistence\PriceProductMerchantRelationshipStoragePersistenceFactory;
+use Spryker\Zed\PriceProductMerchantRelationshipStorage\Persistence\PriceProductMerchantRelationshipStorageRepository;
 
 /**
  * Inherited Methods
@@ -30,4 +36,53 @@ use Codeception\Actor;
 class PriceProductMerchantRelationshipStorageCommunicationTester extends Actor
 {
     use _generated\PriceProductMerchantRelationshipStorageCommunicationTesterActions;
+
+    public function ensureMerchantRelationshipToCompanyBusinessUnitTableIsEmpty(): void
+    {
+        SpyMerchantRelationshipToCompanyBusinessUnitQuery::create()->deleteAll();
+    }
+
+    public function createFacadeWithMerchantRelationPriceKeyFlag(bool $isMerchantRelationPriceKeyEnabled): PriceProductMerchantRelationshipStorageFacade
+    {
+        $priceProductMerchantRelationshipStorageFacade = new PriceProductMerchantRelationshipStorageFacade();
+        $priceProductMerchantRelationshipStorageFacade->setFactory(
+            $this->createBusinessFactoryWithMerchantRelationPriceKeyFlag($isMerchantRelationPriceKeyEnabled),
+        );
+
+        return $priceProductMerchantRelationshipStorageFacade;
+    }
+
+    public function createBusinessFactoryWithMerchantRelationPriceKeyFlag(
+        bool $isMerchantRelationPriceKeyEnabled
+    ): PriceProductMerchantRelationshipStorageBusinessFactory {
+        $persistenceFactory = $this->createPersistenceFactoryWithMerchantRelationPriceKeyFlag($isMerchantRelationPriceKeyEnabled);
+
+        /** @var \Spryker\Zed\PriceProductMerchantRelationshipStorage\Business\PriceProductMerchantRelationshipStorageBusinessFactory $businessFactory */
+        $businessFactory = $this->getFactory();
+        $businessFactory->setRepository((new PriceProductMerchantRelationshipStorageRepository())->setFactory($persistenceFactory));
+        $businessFactory->setEntityManager((new PriceProductMerchantRelationshipStorageEntityManager())->setFactory($persistenceFactory));
+
+        return $businessFactory;
+    }
+
+    public function createRepositoryWithMerchantRelationPriceKeyFlag(bool $isMerchantRelationPriceKeyEnabled): PriceProductMerchantRelationshipStorageRepository
+    {
+        $priceProductMerchantRelationshipStorageRepository = new PriceProductMerchantRelationshipStorageRepository();
+        $priceProductMerchantRelationshipStorageRepository->setFactory(
+            $this->createPersistenceFactoryWithMerchantRelationPriceKeyFlag($isMerchantRelationPriceKeyEnabled),
+        );
+
+        return $priceProductMerchantRelationshipStorageRepository;
+    }
+
+    protected function createPersistenceFactoryWithMerchantRelationPriceKeyFlag(
+        bool $isMerchantRelationPriceKeyEnabled
+    ): PriceProductMerchantRelationshipStoragePersistenceFactory {
+        $this->mockConfigMethod('isMerchantRelationPriceKeyEnabled', $isMerchantRelationPriceKeyEnabled);
+
+        $persistenceFactory = new PriceProductMerchantRelationshipStoragePersistenceFactory();
+        $persistenceFactory->setConfig($this->getModuleConfig());
+
+        return $persistenceFactory;
+    }
 }

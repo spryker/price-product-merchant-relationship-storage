@@ -143,4 +143,68 @@ interface PriceProductMerchantRelationshipStorageRepositoryInterface
      * @return array<\Generated\Shared\Transfer\PriceProductMerchantRelationshipTransfer>
      */
     public function getFilteredPriceProductAbstractMerchantRelationships(FilterTransfer $filterTransfer): array;
+
+    /**
+     * @param array<int> $companyBusinessUnitIds
+     *
+     * @return array<int, array<int>>
+     */
+    public function findMerchantRelationshipIdsGroupedByCompanyBusinessUnitIds(array $companyBusinessUnitIds): array;
+
+    /**
+     * @param array<int> $merchantRelationshipIds
+     *
+     * @return array<int>
+     */
+    public function findMerchantRelationshipIdsWithCompanyBusinessUnit(array $merchantRelationshipIds): array;
+
+    /**
+     * @param array<int> $merchantRelationshipIds
+     *
+     * @return array<int>
+     */
+    public function findMerchantRelationshipIdsWithPriceProductAbstractStorage(array $merchantRelationshipIds): array;
+
+    /**
+     * @param array<int> $merchantRelationshipIds
+     *
+     * @return array<int>
+     */
+    public function findMerchantRelationshipIdsWithPriceProductConcreteStorage(array $merchantRelationshipIds): array;
+
+    /**
+     * @param array<int> $merchantRelationshipIds
+     *
+     * @return array<int>
+     */
+    public function findProductAbstractIdsForReconciliationByMerchantRelationshipIds(array $merchantRelationshipIds): array;
+
+    /**
+     * @param array<int> $merchantRelationshipIds
+     *
+     * @return array<int>
+     */
+    public function findProductConcreteIdsForReconciliationByMerchantRelationshipIds(array $merchantRelationshipIds): array;
+
+    /**
+     * @return array<\Generated\Shared\Transfer\CompanyBusinessUnitTransfer>
+     */
+    public function getFilteredCompanyBusinessUnitsWithMerchantRelationship(FilterTransfer $filterTransfer): array;
+
+    /**
+     * @param array<int> $companyBusinessUnitIds
+     *
+     * @return array<\Orm\Zed\PriceProductMerchantRelationshipStorage\Persistence\SpyMerchantRelationBusinessUnitStorage>
+     */
+    public function findExistingMerchantRelationBusinessUnitStorageEntitiesByCompanyBusinessUnitIds(array $companyBusinessUnitIds): array;
+
+    /**
+     * @param array<int> $merchantRelationBusinessUnitStorageIds
+     *
+     * @return array<\Generated\Shared\Transfer\SpyMerchantRelationBusinessUnitStorageEntityTransfer>
+     */
+    public function findFilteredMerchantRelationBusinessUnitStorageEntities(
+        FilterTransfer $filterTransfer,
+        array $merchantRelationBusinessUnitStorageIds = []
+    ): array;
 }

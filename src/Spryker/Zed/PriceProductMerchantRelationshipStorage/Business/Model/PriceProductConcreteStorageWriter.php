@@ -34,6 +34,8 @@ class PriceProductConcreteStorageWriter extends AbstractPriceProductMerchantRela
         $productChunkSize = $this->priceProductMerchantRelationshipStorageConfig->getProductChunkSize();
 
         foreach (array_chunk($companyBusinessUnitIds, $companyBusinessUnitChunkSize) as $companyBusinessUnitIdsChunk) {
+            $this->merchantRelationBusinessUnitStorageWriter->publishByCompanyBusinessUnitIds($companyBusinessUnitIdsChunk);
+
             $productIds = $this->priceProductMerchantRelationshipStorageRepository
                 ->findProductConcreteIdsForReconciliationByCompanyBusinessUnitIds($companyBusinessUnitIdsChunk);
 
@@ -54,7 +56,7 @@ class PriceProductConcreteStorageWriter extends AbstractPriceProductMerchantRela
             ->findMerchantRelationshipProductConcretePricesDataByIds($priceProductMerchantRelationshipIds);
 
         $priceKeys = array_map(function (PriceProductMerchantRelationshipStorageTransfer $priceProductMerchantRelationshipStorageTransfer) {
-            return $priceProductMerchantRelationshipStorageTransfer->getPriceKey();
+            return $priceProductMerchantRelationshipStorageTransfer->getPriceKeyOrFail();
         }, $priceProductMerchantRelationshipStorageTransfers);
 
         $existingStorageEntities = $this->priceProductMerchantRelationshipStorageRepository
@@ -178,7 +180,7 @@ class PriceProductConcreteStorageWriter extends AbstractPriceProductMerchantRela
 
         return $this->priceGrouper->groupPricesData(
             $priceProductMerchantRelationshipStorageTransfer,
-            $this->getExistingPricesDataForPriceKey($existingStorageEntities, $priceProductMerchantRelationshipStorageTransfer->getPriceKey()),
+            $this->getExistingPricesDataForPriceKey($existingStorageEntities, $priceProductMerchantRelationshipStorageTransfer->getPriceKeyOrFail()),
         );
     }
 
