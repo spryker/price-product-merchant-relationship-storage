@@ -21,7 +21,8 @@ use Spryker\Zed\PriceProductMerchantRelationshipStorage\Communication\PriceProdu
 use Spryker\Zed\PriceProductMerchantRelationshipStorage\PriceProductMerchantRelationshipStorageDependencyProvider;
 use Spryker\Zed\Synchronization\Business\SynchronizationFacadeInterface;
 use SprykerTest\Zed\PriceProductMerchantRelationshipStorage\PriceProductMerchantRelationshipStorageCommunicationTester;
-use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Helper\HelperSet;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
@@ -37,8 +38,6 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 class PriceProductMerchantRelationshipStorageCleanupConsoleTest extends Unit
 {
-    protected const string COMMAND_NAME = 'price-product-merchant-relationship-storage:cleanup';
-
     protected const string OPTION_FORCE = '--force';
 
     protected const string OPTION_CHUNK_SIZE = '--chunk-size';
@@ -228,10 +227,9 @@ class PriceProductMerchantRelationshipStorageCleanupConsoleTest extends Unit
         $priceProductMerchantRelationshipStorageCleanupConsole->setFacade($priceProductMerchantRelationshipStorageFacade);
         $priceProductMerchantRelationshipStorageCleanupConsole->setFactory($communicationFactory);
 
-        $application = new Application();
-        $application->addCommand($priceProductMerchantRelationshipStorageCleanupConsole);
+        $priceProductMerchantRelationshipStorageCleanupConsole->setHelperSet(new HelperSet([new QuestionHelper()]));
 
-        return new CommandTester($application->find(static::COMMAND_NAME));
+        return new CommandTester($priceProductMerchantRelationshipStorageCleanupConsole);
     }
 
     protected function createAbstractStorageEntity(?int $idMerchantRelationship): SpyPriceProductAbstractMerchantRelationshipStorage

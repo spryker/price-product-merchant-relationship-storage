@@ -7,8 +7,10 @@
 
 namespace SprykerTest\Zed\PriceProductMerchantRelationshipStorage\Business;
 
+use Closure;
 use Codeception\Stub;
 use Codeception\Test\Unit;
+use Generated\Shared\Transfer\QueueSendMessageTransfer;
 use Generated\Shared\Transfer\SynchronizationMessageTransfer;
 use Orm\Zed\MerchantRelationship\Persistence\SpyMerchantRelationshipToCompanyBusinessUnitQuery;
 use Orm\Zed\PriceProductMerchantRelationshipStorage\Persistence\SpyMerchantRelationBusinessUnitStorage;
@@ -36,6 +38,8 @@ class MerchantRelationBusinessUnitStorageWriterTest extends Unit
 {
     protected const string SYNCHRONIZATION_FACADE_LOCATOR_CACHE_KEY = 'synchronization-facade';
 
+    protected const string QUEUE_CLIENT_LOCATOR_CACHE_KEY = 'queue-client';
+
     protected const string RESOURCE_NAME = 'mrbu';
 
     protected const int ID_COMPANY_BUSINESS_UNIT_WITHOUT_MERCHANT_RELATIONSHIP = 990001;
@@ -45,9 +49,9 @@ class MerchantRelationBusinessUnitStorageWriterTest extends Unit
     protected PriceProductMerchantRelationshipStorageBusinessTester $tester;
 
     /**
-     * @var array<\Generated\Shared\Transfer\SynchronizationMessageTransfer>
+     * @var array<string>
      */
-    protected array $synchronizationMessageTransfers = [];
+    protected array $synchronizedResourceNames = [];
 
     protected function setUp(): void
     {
@@ -67,7 +71,7 @@ class MerchantRelationBusinessUnitStorageWriterTest extends Unit
 
         // Assert
         $this->assertSame(1, $this->countLookupStorageEntities($idCompanyBusinessUnit));
-        $this->assertCount(1, $this->getLookupSynchronizationMessageTransfers());
+        $this->assertCount(1, $this->getLookupSynchronizedResourceNames());
     }
 
     public function testPublishByCompanyBusinessUnitIdsDoesNotSendSynchronizationMessageOnCreateWhenSendingToQueueIsDisabled(): void
@@ -81,7 +85,7 @@ class MerchantRelationBusinessUnitStorageWriterTest extends Unit
 
         // Assert
         $this->assertSame(1, $this->countLookupStorageEntities($idCompanyBusinessUnit));
-        $this->assertCount(0, $this->getLookupSynchronizationMessageTransfers());
+        $this->assertCount(0, $this->getLookupSynchronizedResourceNames());
     }
 
     public function testPublishByCompanyBusinessUnitIdsDoesNotSendSynchronizationMessageOnUpdateWhenSendingToQueueIsDisabled(): void
@@ -99,7 +103,7 @@ class MerchantRelationBusinessUnitStorageWriterTest extends Unit
             [static::ID_STALE_MERCHANT_RELATIONSHIP],
             $this->getLookupStorageIdMerchantRelationships($idCompanyBusinessUnit),
         );
-        $this->assertCount(0, $this->getLookupSynchronizationMessageTransfers());
+        $this->assertCount(0, $this->getLookupSynchronizedResourceNames());
     }
 
     public function testPublishByCompanyBusinessUnitIdsDoesNotSendSynchronizationMessageOnRemoveWhenSendingToQueueIsDisabled(): void
@@ -113,7 +117,7 @@ class MerchantRelationBusinessUnitStorageWriterTest extends Unit
 
         // Assert
         $this->assertSame(0, $this->countLookupStorageEntities(static::ID_COMPANY_BUSINESS_UNIT_WITHOUT_MERCHANT_RELATIONSHIP));
-        $this->assertCount(0, $this->getLookupSynchronizationMessageTransfers());
+        $this->assertCount(0, $this->getLookupSynchronizedResourceNames());
     }
 
     public function testPublishByCompanyBusinessUnitIdsSendsSynchronizationMessageOnRemoveWhenSendingToQueueIsEnabled(): void
@@ -127,7 +131,7 @@ class MerchantRelationBusinessUnitStorageWriterTest extends Unit
 
         // Assert
         $this->assertSame(0, $this->countLookupStorageEntities(static::ID_COMPANY_BUSINESS_UNIT_WITHOUT_MERCHANT_RELATIONSHIP));
-        $this->assertCount(1, $this->getLookupSynchronizationMessageTransfers());
+        $this->assertCount(1, $this->getLookupSynchronizedResourceNames());
     }
 
     public function testPublishByCompanyBusinessUnitIdsCreatesOneLookupStorageEntityWhenCompanyBusinessUnitIdIsDuplicated(): void
@@ -166,20 +170,36 @@ class MerchantRelationBusinessUnitStorageWriterTest extends Unit
         $synchronizationFacadeMock = $this->createMock(SynchronizationFacadeInterface::class);
         $synchronizationFacadeMock->method('addSynchronizationMessageToBuffer')
             ->willReturnCallback(function (SynchronizationMessageTransfer $synchronizationMessageTransfer): void {
-                $this->synchronizationMessageTransfers[] = $synchronizationMessageTransfer;
+                $this->synchronizedResourceNames[] = (string)$synchronizationMessageTransfer->getResource();
             });
 
+        $queueClient = new class (function (string $resourceName): void {
+            $this->synchronizedResourceNames[] = $resourceName;
+        }) {
+            public function __construct(protected Closure $addResourceName)
+            {
+            }
+
+            public function sendMessage(string $queueName, QueueSendMessageTransfer $queueSendMessageTransfer): void
+            {
+                $message = json_decode((string)$queueSendMessageTransfer->getBody(), true, 512, JSON_THROW_ON_ERROR);
+
+                ($this->addResourceName)((string)(current($message)['resource'] ?? ''));
+            }
+        };
+
         $this->tester->addToLocatorCache(static::SYNCHRONIZATION_FACADE_LOCATOR_CACHE_KEY, $synchronizationFacadeMock);
+        $this->tester->addToLocatorCache(static::QUEUE_CLIENT_LOCATOR_CACHE_KEY, $queueClient);
     }
 
     /**
-     * @return array<\Generated\Shared\Transfer\SynchronizationMessageTransfer>
+     * @return array<string>
      */
-    protected function getLookupSynchronizationMessageTransfers(): array
+    protected function getLookupSynchronizedResourceNames(): array
     {
         return array_values(array_filter(
-            $this->synchronizationMessageTransfers,
-            fn (SynchronizationMessageTransfer $synchronizationMessageTransfer): bool => $synchronizationMessageTransfer->getResource() === static::RESOURCE_NAME,
+            $this->synchronizedResourceNames,
+            fn (string $resourceName): bool => $resourceName === static::RESOURCE_NAME,
         ));
     }
 
@@ -200,7 +220,9 @@ class MerchantRelationBusinessUnitStorageWriterTest extends Unit
      */
     protected function haveLookupStorageEntity(int $idCompanyBusinessUnit, array $merchantRelationshipIds): void
     {
-        (new SpyMerchantRelationBusinessUnitStorage())
+        $merchantRelationBusinessUnitStorageEntity = new SpyMerchantRelationBusinessUnitStorage();
+        $merchantRelationBusinessUnitStorageEntity->setIsSendingToQueue(false);
+        $merchantRelationBusinessUnitStorageEntity
             ->setFkCompanyBusinessUnit($idCompanyBusinessUnit)
             ->setData([PriceProductMerchantRelationshipStorageConstants::MERCHANT_RELATION_BUSINESS_UNIT_DATA_KEY_MERCHANT_RELATIONSHIP_IDS => $merchantRelationshipIds])
             ->save();

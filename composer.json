@@ -14,7 +14,7 @@
         "spryker/price-product-merchant-relationship": "^1.4.1",
         "spryker/price-product-merchant-relationship-storage-extension": "^1.0.0",
         "spryker/price-product-storage-extension": "^1.0.0",
-        "spryker/propel": "^3.47.0",
+        "spryker/propel": "^3.51.2",
         "spryker/propel-orm": "^1.0.0",
         "spryker/publisher-extension": "^1.0.0",
         "spryker/storage": "^3.0.0",
