@@ -52,12 +52,12 @@ class PriceGrouper implements PriceGrouperInterface
 
     protected function filterPriceData(array $priceData, string $excludeKey): array
     {
-        $priceData = array_filter($priceData, function ($v, $k) use ($excludeKey) {
-            if ($k === $excludeKey) {
+        $priceData = array_filter($priceData, function ($value, $key) use ($excludeKey) {
+            if ($key === $excludeKey) {
                 return true;
             }
 
-            return (bool)$v;
+            return (bool)$value;
         }, ARRAY_FILTER_USE_BOTH);
 
         foreach ($priceData as $key => &$value) {
